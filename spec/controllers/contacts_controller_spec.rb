@@ -3,8 +3,20 @@ require 'rails_helper'
 describe ContactsController do
   describe 'GET #index' do
     context 'with params[:letter]' do
-      it 'populates an array of contacts starting with the letter'
-      it 'renders the :index template'
+      it 'populates an array of contacts starting with the letter' do
+        jon = create(:contact, lastname: 'Jon')
+        herbert = create(:contact, lastname: 'Herbert')
+
+        get :index, letter: 'H'
+
+        expect(assigns(:contacts)).to match_array([herbert])
+      end
+
+      it 'renders the :index template' do
+        get :index, letter: 'Z'
+
+        expect(response).to render_template :index
+      end
     end
 
     context 'without params[:letter]' do
@@ -16,13 +28,13 @@ describe ContactsController do
   describe 'GET #show' do
     it 'assigns the requested contact to @contact' do
       contact = create(:contact)
-      get :show, params: { id: contact }
+      get :show, params: { id: contact.id }
 
       expect(assigns(:contact)).to eq contact
     end
     it 'renders the :show template' do
       contact = create(:contact)
-      get :show, params: { id: contact } 
+      get :show, params: { id: contact.id } 
 
       expect(response).to render_template :show
     end
