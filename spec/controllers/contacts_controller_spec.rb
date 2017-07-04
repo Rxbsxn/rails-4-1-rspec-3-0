@@ -52,13 +52,33 @@ describe ContactsController do
   end
 
   describe 'GET #new' do
-    it 'assigns a new Contact to @contact'
-    it 'renders the :new template'
+    it 'assigns a new Contact to @contact' do 
+      get :new
+      expect(assigns(:contact)).to be_a_new(Contact)
+    end
+
+    it 'renders the :new template' do
+      get :new
+      expect(response).to render_template :new
+    end
   end
 
   describe 'GET #edit' do
-    it 'assigns the requested contact to @contact'
-    it 'renders the :edit template'
+    it 'assigns the requested contact to @contact' do
+      contact = create(:contact)
+
+      get :edit, params: { id: contact.id }
+
+      expect(assigns(:contact)).to eq contact
+    end
+
+    it 'renders the :edit template' do
+      contact = create(:contact)
+    
+      get :edit, params: { id: contact.id }
+
+      expect(response).to render_template :edit
+    end
   end
 
   describe 'POST #create' do
