@@ -4,7 +4,7 @@ describe ContactsController do
   describe 'GET #index' do
     context 'with params[:letter]' do
       it 'populates an array of contacts starting with the letter' do
-        jon = create(:contact, lastname: 'Jon')
+        create(:contact, lastname: 'Jon')
         herbert = create(:contact, lastname: 'Herbert')
 
         get :index, letter: 'H'
@@ -92,12 +92,22 @@ describe ContactsController do
 
     context 'with valid attributes' do
       it 'saves the new contact in the database' do
+        @phones = [
+          attributes_for(:phone),
+          attributes_for(:phone),
+          attributes_for(:phone)
+        ]
         post :create, contact: attributes_for(:contact, phones_attributes: @phones)
         
         expect(Contact.count).to eq 1
       end
 
       it 'redirects to contacts#show' do
+        @phones = [
+          attributes_for(:phone),
+          attributes_for(:phone),
+          attributes_for(:phone)
+        ]
         post :create, contact: attributes_for(:contact, phones_attributes: @phones)
 
         expect(response).to redirect_to contact_path(assigns[:contact])        
@@ -120,18 +130,16 @@ describe ContactsController do
   end
 
   describe 'PATCH #update' do
-    before :each do
-      @contact = create(:contact, firstname: 'Janusz', lastname: 'Wolny')
-    end
-
     context 'with valid attributes' do
       it 'updates the contact in the database' do
+        @contact = create(:contact, firstname: 'Janusz', lastname: 'Wolny')
         patch :update, id: @contact, contact: attributes_for(:contact)
         
         expect(assigns(:contact)).to eq(@contact)
       end
 
       it 'redirects to the contact' do
+        @contact = create(:contact, firstname: 'Janusz', lastname: 'Wolny')
         patch :update, id: @contact, contact: attributes_for(:contact)
 
         expect(response).to redirect_to @contact
@@ -140,6 +148,7 @@ describe ContactsController do
 
     context 'with invalid attributes' do
       it 'does not update the contact' do
+        @contact = create(:contact, firstname: 'Janusz', lastname: 'Wolny')
         patch :update, id: @contact, contact: attributes_for(:contact, firstname: 'Adam', lastname: nil)
         
         @contact.reload
@@ -149,6 +158,7 @@ describe ContactsController do
       end
       
       it 're-renders the :edit template' do
+        @contact = create(:contact, firstname: 'Janusz', lastname: 'Wolny')
         patch :update, id: @contact, contact: attributes_for(:contact, firstname: nil)
 
         expect(response).to render_template :edit
