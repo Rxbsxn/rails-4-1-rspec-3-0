@@ -20,8 +20,19 @@ describe ContactsController do
     end
 
     context 'without params[:letter]' do
-      it 'populates an array of all contacts'
-      it 'renders the :index template'
+      it 'populates an array of all contacts' do
+        jon = create(:contact, lastname: 'Jon')
+        herbert = create(:contact, lastname: 'Herbert')
+
+        get :index
+
+        expect(assigns(:contacts)).to match_array([jon, herbert])
+      end
+      
+      it 'renders the :index template' do
+        get :index
+        expect(response).to render_template :index
+      end
     end
   end
 
