@@ -46,17 +46,30 @@ describe Contact do
     expect(contact.name).to eq 'Bogdan Powstaniec'
   end
   
-  # describe '.by_letter' do
-  #   smith = build(:contact, firstname: "John", lastname: 'Smith', email: "12@gc.com")
-  #   johnson = build(:contact, firstname: 'Carl', lastname: "Johnson", email: '14@gc.com')
-  #   jones = build(:contact, firstname: "Adyan", lastname: 'Jones', email: '13@gc.com')
+  describe '.by_letter' do
     
-  #   context 'returns a sorted array of result that match' do
-  #     it { expect(Contact.by_letter("J")).to eq [johnson, jones] }
-  #   end
+    context 'array of result that match' do
+      it 'returns order array of results' do
+        create(:contact, firstname: "John", lastname: 'Smith', email: "12@gc.com")
+        johnson = create(:contact, firstname: 'Carl', lastname: "Johnson", email: '14@gc.com')
+        jones = create(:contact, firstname: "Adyan", lastname: 'Jones', email: '13@gc.com')
+    
+        expect(Contact.by_letter("J")).to eq [johnson, jones]
+      end
+    end
 
-  #   context 'omits results that do not match' do
-  #     it { expect(Contact.by_letter("J")).not_to include smith}
-  #   end
-  # end
+    context 'omits results that do not match' do
+      it 'returns array with omitted results' do
+        smith = create(:contact, firstname: "John", lastname: 'Smith', email: "12@gc.com")        
+        
+        expect(Contact.by_letter("J")).not_to include smith
+      end
+    end
+  end
+
+  it 'has three phone numbers' do
+    contact = create(:contact)
+
+    expect(contact.phones.count).to eq 3
+  end
 end
