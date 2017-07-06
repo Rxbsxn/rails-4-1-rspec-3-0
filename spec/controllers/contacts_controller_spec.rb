@@ -1,7 +1,14 @@
 require 'rails_helper'
 
 describe ContactsController do
+  describe 'admin' do
+    before :each do
+      user = create(:admin)
+      session[:user_id] = user.id
+    end
+  
   describe 'GET #index' do
+  
     context 'with params[:letter]' do
       it 'populates an array of contacts starting with the letter' do
         create(:contact, lastname: 'Jon')
@@ -180,5 +187,6 @@ describe ContactsController do
 
       expect(response).to redirect_to contacts_url 
     end
+  end
   end
 end
