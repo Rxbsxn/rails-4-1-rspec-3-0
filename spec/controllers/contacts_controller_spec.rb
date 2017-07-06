@@ -14,13 +14,13 @@ describe ContactsController do
         create(:contact, lastname: 'Jon')
         herbert = create(:contact, lastname: 'Herbert')
 
-        get :index, letter: 'H'
+        get :index, params: { letter: 'H' }
 
         expect(assigns(:contacts)).to match_array([herbert])
       end
 
       it 'renders the :index template' do
-        get :index, letter: 'Z'
+        get :index, params: { letter: 'Z' }
 
         expect(response).to render_template :index
       end
@@ -104,7 +104,7 @@ describe ContactsController do
           attributes_for(:phone),
           attributes_for(:phone)
         ]
-        post :create, contact: attributes_for(:contact, phones_attributes: @phones)
+        post :create, params: { contact: attributes_for(:contact, phones_attributes: @phones) }
         
         expect(Contact.count).to eq 1
       end
@@ -115,7 +115,7 @@ describe ContactsController do
           attributes_for(:phone),
           attributes_for(:phone)
         ]
-        post :create, contact: attributes_for(:contact, phones_attributes: @phones)
+        post :create, params: { contact: attributes_for(:contact, phones_attributes: @phones) }
 
         expect(response).to redirect_to contact_path(assigns[:contact])        
       end
@@ -123,13 +123,13 @@ describe ContactsController do
 
     context 'with invalid attributes' do
       it 'does not save the new contact in the database' do 
-        post :create, contact: attributes_for(:invalid_contact)
+        post :create, params: { contact: attributes_for(:invalid_contact) }
 
         expect(Contact.count).to eq 0
       end
 
       it 're-renders the :new template' do
-        post :create, contact: attributes_for(:invalid_contact)
+        post :create, params: { contact: attributes_for(:invalid_contact) }
 
         expect(response).to render_template(:new)
       end 
@@ -140,14 +140,14 @@ describe ContactsController do
     context 'with valid attributes' do
       it 'updates the contact in the database' do
         @contact = create(:contact, firstname: 'Janusz', lastname: 'Wolny')
-        patch :update, id: @contact, contact: attributes_for(:contact)
+        patch :update, params: { id: @contact, contact: attributes_for(:contact) }
         
         expect(assigns(:contact)).to eq(@contact)
       end
 
       it 'redirects to the contact' do
         @contact = create(:contact, firstname: 'Janusz', lastname: 'Wolny')
-        patch :update, id: @contact, contact: attributes_for(:contact)
+        patch :update, params: { id: @contact, contact: attributes_for(:contact) }
 
         expect(response).to redirect_to @contact
       end
@@ -156,7 +156,7 @@ describe ContactsController do
     context 'with invalid attributes' do
       it 'does not update the contact' do
         @contact = create(:contact, firstname: 'Janusz', lastname: 'Wolny')
-        patch :update, id: @contact, contact: attributes_for(:contact, firstname: 'Adam', lastname: nil)
+        patch :update, params: { id: @contact, contact: attributes_for(:contact, firstname: 'Adam', lastname: nil) } 
         
         @contact.reload
 
@@ -166,7 +166,7 @@ describe ContactsController do
       
       it 're-renders the :edit template' do
         @contact = create(:contact, firstname: 'Janusz', lastname: 'Wolny')
-        patch :update, id: @contact, contact: attributes_for(:contact, firstname: nil)
+        patch :update, params: { id: @contact, contact: attributes_for(:contact, firstname: nil) }
 
         expect(response).to render_template :edit
       end
@@ -177,13 +177,13 @@ describe ContactsController do
     it 'deletes the contact from the database' do
       contact = create(:contact)
       
-      expect { delete :destroy, id: contact }.to change(Contact, :count).by(-1)
+      expect { delete :destroy, params: { id: contact } }.to change(Contact, :count).by(-1)
     end
 
     it 'redirects to users#index' do
       contact = create(:contact)
 
-      delete :destroy, id: contact
+      delete :destroy, params: { id: contact }
 
       expect(response).to redirect_to contacts_url 
     end
