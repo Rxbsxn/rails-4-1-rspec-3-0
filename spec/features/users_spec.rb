@@ -3,12 +3,7 @@ require 'rails_helper'
 feature 'User management' do
   scenario 'adds a new user' do
     admin = create(:admin)
-
-    visit root_path
-    click_link 'Log In'
-    fill_in 'Email', with: admin.email
-    fill_in 'Password', with: admin.password
-    click_button 'Log In'
+    sign_in(admin)
 
     visit root_path
 
@@ -21,6 +16,9 @@ feature 'User management' do
         with: 'adamnowak12'
       click_button 'Create User'
     }.to change(User, :count).by(1)
+
+    # save_and_open_page
+
     expect(current_path).to eq users_path
     expect(page).to have_content 'New user created'
 
